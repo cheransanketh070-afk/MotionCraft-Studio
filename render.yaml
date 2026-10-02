@@ -1,0 +1,30 @@
+# Render Blueprint — New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: motioncraft-studio
+    runtime: docker
+    plan: starter            # video encoding is CPU-heavy: starter or higher recommended
+    healthCheckPath: /healthz
+    autoDeploy: true
+    # Persistent disk keeps videos across deploys (optional; remove if you don't need it).
+    disk:
+      name: motioncraft-data
+      mountPath: /data
+      sizeGB: 5
+    envVars:
+      - key: ACCESS_KEYS       # YOUR private data: comma-separated keys. Empty = public/open mode.
+        sync: false
+      - key: ADMIN_KEY
+        generateValue: true
+      - key: TRUST_PROXY_HOPS  # Render's proxy appends the client IP
+        value: "1"
+      - key: BRAND_NAME
+        value: MotionCraft
+      - key: WATERMARK_TEXT
+        value: ""
+      - key: MAX_QUALITY       # draft | hd | fhd
+        value: hd
+      - key: WORKERS
+        value: "1"
+      - key: RETENTION_HOURS
+        value: "24"
